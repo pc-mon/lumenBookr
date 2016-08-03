@@ -15,3 +15,4 @@ $app->get('/', function () use ($app) {
     return $app->welcome();
 });
 $app->get('/books', 'BooksController@index');
+$app->get('/books/{id}', 'BooksController@show');

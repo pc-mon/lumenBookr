@@ -8,7 +8,7 @@ class BooksControllerTest extends TestCase
   {
     $this->visit('/books')->seeStatusCode(200);
   }
-  
+
   public function index_should_return_a_collection_of_records()
   {
   $this
@@ -19,5 +19,39 @@ class BooksControllerTest extends TestCase
     ->seeJson([
       'title' => 'A Wrinkle in Time'
     ]);
+  }
+  public function show_should_return_a_valid_book()
+  {
+    $this
+    ->get('books/1')
+    ->seeStatusCode(200)
+    ->seeJson(
+      [
+        'id'=>1,
+        'title' => 'War of the Worlds',
+        'description' => 'A science fiction masterpiece about Martians invad\
+        ing London',
+        'author' => 'H. G. Wells'
+      ]
+    );
+    $data = json_decode($this->response->getContent(), true);
+    $this->assertArrayHasKey('created_at', $data);
+    $this->assertArrayHasKey('updated_at', $data);
+  }
+  /** @test **/
+  public function show_should_fail_when_the_book_id_does_not_exist()
+  {
+    $this
+      ->get('/books/99999')
+      ->seeStatusCode(404)
+      ->seeJson([
+        'error' => [
+          'message' => 'Book not found'
+        ]
+      ]);
+  }
+  public function show_route_should_not_match_an_invalid_route()
+  {
+    $this->markTestIncomplete('Pending test');
   }
 }

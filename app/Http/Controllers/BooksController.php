@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 */
 use App\Book;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
 class BooksController
 {
   /**
@@ -27,5 +28,15 @@ class BooksController
         ]
       ], 404);
     }
+  }
+
+  public function store(Request $request)
+  {
+    try {
+      $book = Book::create($request->all());
+    } catch (\Exception $e) {
+      dd(get_class($e));
+    }
+    return response()->json(['created' => true], 201);
   }
 }
